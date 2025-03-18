@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using TaskManager.Models;
 using TaskManager.Services;
 using Task = TaskManager.Models.Task;
+using TTask = System.Threading.Tasks.Task;
 
 namespace TaskManager.Pages.Tasks;
 
@@ -19,7 +20,7 @@ public class IndexModel : PageModel
         _dataService = dataService;
     }
 
-    public async System.Threading.Tasks.Task OnGetAsync(int? userId)
+    public async TTask OnGetAsync(int? userId)
     {
         var users = await _dataService.GetUsersAsync();
         Users = new SelectList(users, "Id", "Name", userId);  // Pass selected value to maintain selection

@@ -1,5 +1,6 @@
 using TaskManagerProvider.Domain.Repositories;
 using Task = TaskManager.Models.Task;
+using TTask = System.Threading.Tasks.Task;
 
 namespace TaskManagerProvider.Storage.Repositories
 {
@@ -17,7 +18,7 @@ namespace TaskManagerProvider.Storage.Repositories
         public Task<Task> GetTaskById(int taskId)
         {
             Collection.TryGetValue(taskId, out var task);
-            return System.Threading.Tasks.Task.FromResult(task ?? 
+            return TTask.FromResult(task ?? 
                 throw new KeyNotFoundException($"Expected {nameof(Task)} record for key {taskId} not found."));
         }
 
@@ -27,7 +28,7 @@ namespace TaskManagerProvider.Storage.Repositories
                 .Where(t => t.UserId == userId)
                 .ToList();
 
-            return System.Threading.Tasks.Task.FromResult(filteredTasks.AsEnumerable());
+            return TTask.FromResult(filteredTasks.AsEnumerable());
         }
 
         public Task<Task> CreateTask(Task task)
@@ -37,7 +38,7 @@ namespace TaskManagerProvider.Storage.Repositories
             task.Id = GetNextId();
             if (Collection.TryAdd(task.Id, task))
             {
-                return System.Threading.Tasks.Task.FromResult(task);
+                return TTask.FromResult(task);
             }
             throw new InvalidOperationException("Failed to create a task");
         }
@@ -49,12 +50,12 @@ namespace TaskManagerProvider.Storage.Repositories
             if (Collection.ContainsKey(task.Id))
             {
                 Collection[task.Id] = task;
-                return System.Threading.Tasks.Task.FromResult<Task?>(task);
+                return TTask.FromResult<Task?>(task);
             }
 
-            Logger.LogWarning("Unable to update user with the specified Id: {0}. Record doesn't exist.", task.Id);
+            Logger.LogWarning("Unable to update task with the specified Id: {0}. Record doesn't exist.", task.Id);
 
-            return System.Threading.Tasks.Task.FromResult<Task?>(null);
+            return TTask.FromResult<Task?>(null);
         }
 
         public Task<bool> DeleteTask(int taskId)
@@ -68,10 +69,10 @@ namespace TaskManagerProvider.Storage.Repositories
 
             if (!result)
             {
-                Logger.LogWarning("Unable to delete user with the specified Id: {0}. Record doesn't exist.", taskId);
+                Logger.LogWarning("Unable to delete task with the specified Id: {0}. Record doesn't exist.", taskId);
             }
 
-            return System.Threading.Tasks.Task.FromResult(result);
+            return TTask.FromResult(result);
         }
 
         public Task<bool[]> DeleteTasks(IEnumerable<Task> tasks)
@@ -86,7 +87,7 @@ namespace TaskManagerProvider.Storage.Repositories
                 tasksToComplete.Add(DeleteTask(task.Id));
             }
 
-            return System.Threading.Tasks.Task.WhenAll(tasksToComplete);
+            return TTask.WhenAll(tasksToComplete);
         }
     }
 }

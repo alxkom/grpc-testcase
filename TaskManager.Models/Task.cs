@@ -2,7 +2,7 @@ namespace TaskManager.Models;
 using System.Runtime.Serialization;
 
 [DataContract]
-public class Task
+public record Task
 {
     [DataMember(Order = 1)]
     public int Id { get; set; }
