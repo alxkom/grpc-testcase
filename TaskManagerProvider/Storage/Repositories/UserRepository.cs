@@ -1,5 +1,6 @@
 using TaskManager.Models;
 using TaskManagerProvider.Domain.Repositories;
+using TTask = System.Threading.Tasks.Task;
 
 namespace TaskManagerProvider.Storage.Repositories
 {
@@ -17,7 +18,7 @@ namespace TaskManagerProvider.Storage.Repositories
         public Task<User> GetUserById(int userId)
         {
             Collection.TryGetValue(userId, out var user);
-            return System.Threading.Tasks.Task.FromResult(user ?? 
+            return TTask.FromResult(user ?? 
                 throw new KeyNotFoundException($"Expected {nameof(User)} record for key {userId} not found."));
         }
 
@@ -28,7 +29,7 @@ namespace TaskManagerProvider.Storage.Repositories
             user.Id = GetNextId();
             if (Collection.TryAdd(user.Id, user))
             {
-                return System.Threading.Tasks.Task.FromResult(user);
+                return TTask.FromResult(user);
             }
             throw new InvalidOperationException("Failed to create a user");
         }
@@ -40,12 +41,12 @@ namespace TaskManagerProvider.Storage.Repositories
             if (Collection.ContainsKey(user.Id))
             {
                 Collection[user.Id] = user;
-                return System.Threading.Tasks.Task.FromResult<User?>(user);
+                return TTask.FromResult<User?>(user);
             }
 
             Logger.LogWarning("Unable to update user with the specified Id: {0}. Record doesn't exist.", user.Id);
 
-            return System.Threading.Tasks.Task.FromResult<User?>(null);
+            return TTask.FromResult<User?>(null);
         }
 
         public Task<bool> DeleteUser(int userId)
@@ -62,7 +63,7 @@ namespace TaskManagerProvider.Storage.Repositories
                 Logger.LogWarning("Unable to delete user with the specified Id: {0}. Record doesn't exist.", userId);
             }
 
-            return System.Threading.Tasks.Task.FromResult(result);
+            return TTask.FromResult(result);
         }
     }
 }

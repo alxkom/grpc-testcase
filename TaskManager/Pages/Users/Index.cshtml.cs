@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using TaskManager.Models;
 using TaskManager.Services;
+using TTask = System.Threading.Tasks.Task;
+
 
 namespace TaskManager.Pages.Users;
 
@@ -17,7 +19,7 @@ public class IndexModel : PageModel
         _dataService = dataService;
     }
 
-    public async System.Threading.Tasks.Task OnGetAsync()
+    public async TTask OnGetAsync()
     {
         Users = await _dataService.GetUsersAsync();
     }
