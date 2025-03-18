@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+option csharp_namespace = "TaskManagerProvider";
+
+package taskmanagerservice;
+
+service TaskManager {
+    rpc GetUsers (Empty) returns (UsersResponse);
+    rpc GetUserById (UserKey) returns (UserItem);
+    rpc CreateUser (UserItem) returns (UserItem);
+    rpc UpdateUser (UserItem) returns (UserItem);
+    rpc DeleteUser (UserKey) returns (Empty);
+
+    rpc GetTasks (Empty) returns (TasksResponse);
+    rpc GetUserTasks (UserKey) returns (TasksResponse);
+    rpc GetTaskById (TaskKey) returns (TaskItem);
+    rpc CreateTask (TaskItem) returns (TaskItem);
+    rpc UpdateTask (TaskItem) returns (TaskItem);
+    rpc DeleteTask (TaskKey) returns (Empty);
+}
+
+message Empty {}
+
+message UserKey {
+    int32 userId = 1;
+}
+
+message UserItem {
+    int32 Id = 1;
+    string Name = 2;
+}
+
+message UsersResponse {
+    repeated UserItem Users = 1;
+}
+
+message TaskKey {
+    int32 taskId = 1;
+}
+
+message TaskItem {
+    int32 Id = 1;
+    string Name = 2;
+    int32 UserId = 3;
+    TaskState State = 4;
+    optional UserItem User = 5;
+}
+
+enum TaskState {
+    New = 0;
+    InProgress = 1;
+    Close = 2;
+}
+
+message TasksResponse {
+    repeated TaskItem Tasks = 1;
+}

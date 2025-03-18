@@ -1,0 +1,45 @@
+@page
+@using TaskManager.Models
+@model TaskManager.Pages.Tasks.CreateModel
+@{
+    ViewData["Title"] = "Create Task";
+}
+
+<h1>Create Task</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-page="Create" method="post">
+            <div class="form-group mb-3">
+                <label asp-for="Task.Name" class="control-label">Name</label>
+                <input asp-for="Task.Name" class="form-control" />
+                <span asp-validation-for="Task.Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Task.UserId" class="control-label">Assigned To</label>
+                <select asp-for="Task.UserId" asp-items="Model.Users" class="form-control">
+                    <option value="">-- Select User --</option>
+                </select>
+                <span asp-validation-for="Task.UserId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Task.State" class="control-label">State</label>
+                <select asp-for="Task.State" asp-items="Model.States" class="form-control"></select>
+                <span asp-validation-for="Task.State" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Create</button>
+                <a asp-page="Index" class="btn btn-secondary">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

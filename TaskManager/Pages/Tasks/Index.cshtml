@@ -1,0 +1,63 @@
+@page
+@using TaskManager.Models
+@model TaskManager.Pages.Tasks.IndexModel
+@{
+    ViewData["Title"] = "Tasks";
+}
+
+<h1>Tasks</h1>
+
+<div class="row mb-3">
+    <div class="col-md-6">
+        <form method="get" class="form-inline">
+            <div class="input-group">
+                <select name="userId" asp-for="SelectedUserId" asp-items="Model.Users" class="form-control">
+                    <option value="">All Users</option>
+                </select>
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-6 text-end">
+        <a asp-page="Create" class="btn btn-primary">Create New Task</a>
+    </div>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Assigned To</th>
+            <th>State</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var task in Model.Tasks)
+        {
+            <tr>
+                <td>@task.Id</td>
+                <td>@task.Name</td>
+                <td>@(task.User?.Name ?? "Unknown")</td>
+                <td>
+                    <span class="badge bg-@(task.State switch {
+                        TaskState.New => "primary",
+                        TaskState.InProgress => "warning",
+                        TaskState.Close => "success",
+                        _ => "secondary"
+                    })">
+                    @task.State
+                </span>
+            </td>
+            <td>
+                <form method="post">
+                    <a asp-page="Edit" asp-route-id="@task.Id" class="btn btn-info btn-sm">Edit</a>
+                    <button type="submit" asp-page-handler="Delete" asp-route-taskId="@task.Id" class="btn btn-danger btn-sm"
+                        onclick="return confirm('Are you sure you want to delete this task?')">Delete</button>
+                </form>
+            </td>
+        </tr>
+                }
+    </tbody>
+</table>

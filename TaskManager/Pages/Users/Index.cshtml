@@ -1,0 +1,38 @@
+@page
+@model TaskManager.Pages.Users.IndexModel
+@{
+    ViewData["Title"] = "Users";
+}
+
+<h1>Users</h1>
+
+<p>
+    <a asp-page="Create" class="btn btn-primary">Create New User</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.Users)
+        {
+            <tr>
+                <td>@user.Id</td>
+                <td>@user.Name</td>
+                <td>
+                    <form method="post">
+                        <a asp-page="Edit" asp-route-id="@user.Id" class="btn btn-info btn-sm">Edit</a>
+                        <a asp-page="/Tasks/Index" asp-route-userId="@user.Id" class="btn btn-secondary btn-sm">View Tasks</a>
+                        <button type="submit" asp-page-handler="Delete" asp-route-userId="@user.Id" class="btn btn-danger btn-sm"
+                            onclick="return confirm('Are you sure you want to delete the user?')">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
