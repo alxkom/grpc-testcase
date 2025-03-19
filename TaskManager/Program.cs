@@ -7,11 +7,13 @@ builder.Services.AddRazorPages();
 builder.Services.AddSingleton<IDataService, DataService>();
 builder.Services.AddAutoMapper(typeof(AppMappingProfile));
 
+// Read gRPC configuration settings and setup the client channel.
+var gRPCProtocolSettings = new gRPCProtocolSettings("http", "localhost", 5001);
+builder.Configuration.GetRequiredSection(nameof(gRPCProtocolSettings)).Bind(gRPCProtocolSettings);
 builder.Services.AddGrpcClient<TaskManagerProvider.TaskManager.TaskManagerClient>(o =>
 {
-    o.Address = new Uri("http://localhost:5000");
+    o.Address = new Uri($"{gRPCProtocolSettings.Protocol}://{gRPCProtocolSettings.Url}:{gRPCProtocolSettings.Port}");
 })
-//.AddInterceptor<LoggingInterceptor>(InterceptorScope.Client);
 .ConfigureChannel(o =>
 {
     o.MaxReceiveMessageSize = 5 * 1024 * 1024; // 5 MB

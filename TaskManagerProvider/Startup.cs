@@ -17,15 +17,7 @@ namespace TaskManagerProvider
                 options.EnableDetailedErrors = true;
                 options.MaxReceiveMessageSize = 2 * 1024 * 1024; // 2 MB
                 options.MaxSendMessageSize = 5 * 1024 * 1024; // 5 MB
-                //options.Interceptors.Add<LoggingInterceptor>();
             });
-            // .AddServiceOptions<TaskManagerService>(options =>
-            // {
-            //     options.MaxReceiveMessageSize = 2 * 1024 * 1024; // 2 MB
-            //     options.MaxSendMessageSize = 5 * 1024 * 1024; // 5 MB
-            // });
-
-            //services.AddSingleton<LoggingInterceptor>();
 
             services.AddAutoMapper(typeof(AppMappingProfile));
 

@@ -63,6 +63,20 @@ namespace TaskManagerProvider.Domain.Engines
             }
 
             bool result = await UserRepository.DeleteUser(userId);
+            if (!result)
+            {
+                List<Task<Task>> tasks = new List<Task<Task>>();
+
+                foreach (var task in relatedTasks)
+                {
+                    tasks.Add(TaskRepository.CreateTask(task));
+                }
+
+                await System.Threading.Tasks.Task.WhenAll(tasks);
+
+                Logger.LogWarning("All related tasks were restored for user with the specifed user Id: {0}", userId);
+            }
+
             return result && allTasksRemoved;
         }
  
